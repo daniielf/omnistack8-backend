@@ -7,7 +7,7 @@ const config = require('./config')
 
 mongoose.connect(`mongodb+srv://${config.username}:${config.password}@omnistackcluster-kudsu.mongodb.net/tindev_users?retryWrites=true&w=majority`, { useNewUrlParser: true });
 
-server.use(express.json());
 server.use(cors());
+server.use(express.json());
 server.use(routes);
 server.listen(3333);

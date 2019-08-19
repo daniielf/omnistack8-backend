@@ -3,6 +3,7 @@ const Dev = require('../models/dev');
 
 module.exports = {
     async store(req, res) {
+        console.log('POST-');
         const username = req.body.username;
         if (!username) return res.status(400).json({ error: `field 'username' is invalid` });
 
@@ -12,6 +13,8 @@ module.exports = {
         const userGet = await axios.get(`https://api.github.com/users/${username}`);
 
         const { avatar_url: avatar, name, bio } = userGet.data;
+        if (!avatar || !name || !bio) return res.status(400).json({ok: false, error: `invalid username: ${username}` })
+
         const newDev = await Dev.create({
             name,
             username,
@@ -38,7 +41,6 @@ module.exports = {
         });
 
         let listCount = allList.length;
-        console.log(allList);
         return res.json({ ok: true, list_count: listCount, list: allList })
     }
 };
