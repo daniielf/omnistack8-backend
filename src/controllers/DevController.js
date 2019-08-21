@@ -11,9 +11,10 @@ module.exports = {
         if (exists) return res.json({ok: true, user: exists});
 
         const userGet = await axios.get(`https://api.github.com/users/${username}`);
+        var { avatar_url: avatar, name, bio } = userGet.data;
 
-        const { avatar_url: avatar, name, bio } = userGet.data;
-        if (!avatar || !name || !bio) return res.status(400).json({ok: false, error: `invalid username: ${username}` })
+        if (!avatar || !name ) return res.status(400).json({ok: false, error: `invalid username: ${username}` })
+        if (bio == null) bio = '';
 
         const newDev = await Dev.create({
             name,
