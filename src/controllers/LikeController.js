@@ -21,6 +21,19 @@ module.exports = {
         var match = false;
         if (destUser.likes.includes(originUser._id)) {
             match = true;
+            
+            const loggedUserSocketId = req.connections[likeOriginID];
+            const targetUserSocketId = req.connections[likeDestID];
+            const socket = req.socket;
+            
+            if (loggedUserSocketId) {
+                socket.to(loggedUserSocketId).emit('match', { name: destUser.name, avatar: destUser.avatar });
+            }
+
+            if (targetUserSocketId) {
+                socket.to(targetUserSocketId).emit('match', { name: originUser.name, avatar: originUser.avatar  });
+            }
+            
             console.log('MATCH!' + originUser.name + '<-->' + destUser.name);
         }
         return res.json({ ok: true, data: { likeOriginID, likeDestID , match }})
